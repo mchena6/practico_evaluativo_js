@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de libros</title>
+</head>
+<body>
+    <h2>Carga de libros</h2>
+    <form onsubmit="agregar_libro(); return false" >
+        <input type="text" id="titulo" placeholder="Titulo del libro">
+        <input type="text" id="autor" placeholder="Autor del libro">
+        <input type="text" id="anio" placeholder="Año de publicacion">
+        <select id="genero">
+
+        </select>
+        <button id="button_form" type="submit">Agregar libro</button>
+    </form>
+    
+    <br>
+    
+    <h3>Buscar por titulo</h3>
+    <input type="text" id="busqueda_titulo" placeholder="Titulo del libro" oninput="buscar_titulo()">
+    
+    <br>
+    
+    <h3>Buscar por genero</h3>
+    <select id="busqueda_genero" onchange="buscar_genero()"> 
+        <option value="todos"></option>
+    </select>
+    
+    <br>
+
+    <h3>Ordenar por año de publicacion</h3>
+    <button id="ordenar_libros" onclick="ordenar_libros()">Ordenar libros</button>
+    <table id="tabla_libros">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Titulo</th>
+                <th>Autor</th>
+                <th>Año de publicacion</th>
+                <th>Genero</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    
+    <br>
+
+    <h3>Resumen</h3>
+    <section id="resumen_libros"></section>
+
+    <script src="js/gestor_libros.js"></script>
+</body>
+</html>
