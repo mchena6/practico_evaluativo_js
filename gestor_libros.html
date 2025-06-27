@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestor de libros</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <h2>Carga de libros</h2>
@@ -12,7 +13,6 @@
         <input type="text" id="autor" placeholder="Autor del libro">
         <input type="text" id="anio" placeholder="Año de publicacion">
         <select id="genero">
-
         </select>
         <button id="button_form" type="submit">Agregar libro</button>
     </form>
@@ -26,7 +26,7 @@
     
     <h3>Buscar por genero</h3>
     <select id="busqueda_genero" onchange="buscar_genero()"> 
-        <option value="todos"></option>
+        <option value="todos_generos"></option>
     </select>
     
     <br>
