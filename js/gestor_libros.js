@@ -1,17 +1,27 @@
 
+// Variables para manejar estados
+let orden_ascendente = false;
+
 // Lista de libros 
 let libros = JSON.parse(localStorage.getItem('libros')) || []
 
 // Generos de libros
 let generos = ['Ficcion', 'Drama', 'Poesia', 'Comedia', 'Historia','Terror','Misterio']
 
-const seleccion_generos = () =>{
-    const select = document.getElementById('genero')
+// Agregar generos a una etiqueta select
+const seleccion_generos = (id) =>{
+    const select = document.getElementById(id)
     select.innerHTML = ''
+
+    // Opción "Todos"
+    const todos = document.createElement('option')
+    todos.value = 'todos'
+    todos.textContent = '-- Todos los géneros --'
+    select.appendChild(todos)
     
     generos.forEach( genero =>{
         const option = document.createElement('option')
-        option.value = genero
+        option.value = genero.toLowerCase()
         option.textContent = genero
         select.appendChild(option)
     })
@@ -28,11 +38,10 @@ const agregar_libro = () =>{
 
     // Comprobar que no esten vacios
     if (titulo !== '' && autor !== '' && anio !== ''){
+        // Agregar libro a la lista
         libros.push({ titulo, autor, anio, genero })
         // Guardar lista de la libros en local storage
-        localStorage.setItem('libros', JSON.stringify(libros))
-        console.log(libros)
-    } 
+        localStorage.setItem('libros', JSON.stringify(libros))} 
 
     // Mostrar libros
     renderizar_libros()
@@ -42,6 +51,18 @@ const agregar_libro = () =>{
     document.getElementById('autor').value = ''
     document.getElementById('anio').value = ''
 }
+
+
+// Eliminar libro de la lista
+const eliminar_libro = (index) =>{
+    // Eliminar por medio del index
+    libros.splice(index)
+
+    // Actualizar local storage y renderizar libros
+    localStorage.setItem('libros', JSON.stringify(libros))
+    renderizar_libros()
+}
+
 
 // Filtrar libros por titulo
 const buscar_titulo = () =>{
@@ -57,18 +78,34 @@ const buscar_titulo = () =>{
 
 // Filtrar libros por genero
 const buscar_genero = () =>{
+
     // Guardar genero seleccionado
-    const filtro_genero = document.getElementById('busqueda_genero').value.toLowerCase()
+    const genero_seleccionado = document.getElementById('busqueda_genero').value
 
-    // Lista con libros filtrados
-    const generos_filtrados = libros.filter(libro => libro.genero.toLowerCase().includes(filtro_genero))
+    // Mostrar todos los libros en caso de seleccionar todos los generos
+    if (genero_seleccionado === 'todos' || genero_seleccionado === '') {
+        renderizar_libros()
+        return
+    }
 
-    // Mostrar libros
+    // Crear lista de libros filtrados
+    const generos_filtrados = libros.filter(libro => libro.genero.toLowerCase().includes(genero_seleccionado)
+    )
+    // Mostrar libros filtrados
     renderizar_libros(generos_filtrados)
 }
 
 const ordenar_libros = () =>{
+    
+    // Crear una copia de la lista libros y ordenarla por año
+    const libros_ordenados =  [...libros].sort((a,b) => {
+        return orden_ascendente ? a.anio - b.anio : b.anio - a.anio
+    })
 
+    // Cambiar valor de la variable
+    orden_ascendente = !orden_ascendente
+    // Mostrar libros ordenados
+    renderizar_libros(libros_ordenados)
 }
 
 // Renderizar libros
@@ -97,7 +134,7 @@ const renderizar_libros = (lista = libros) =>{ // Recibe una lista
             <td>${libro.genero}</td>
             <td>
                 <button onclick="">Editar</button>
-                <button onclick="">Eliminar</button>
+                <button onclick="eliminar_libro(${index})">Eliminar</button>
             </td>
         `
         // Agregar fila a la tabla
@@ -107,5 +144,6 @@ const renderizar_libros = (lista = libros) =>{ // Recibe una lista
 
 document.addEventListener('DOMContentLoaded', () => {
     renderizar_libros()
-    seleccion_generos()
+    seleccion_generos('genero')
+    seleccion_generos('busqueda_genero')
 })
