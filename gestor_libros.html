@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Formulario para cargar libros-->
     <h2>Carga de libros</h2>
     <form onsubmit="agregar_libro(); return false" >
         <input type="text" id="titulo" placeholder="Titulo del libro">
@@ -16,23 +17,25 @@
         </select>
         <button id="button_form" type="submit">Agregar libro</button>
     </form>
-    
+
     <br>
-    
+    <!-- Busqueda de libros por titulo-->    
     <h3>Buscar por titulo</h3>
     <input type="text" id="busqueda_titulo" placeholder="Titulo del libro" oninput="buscar_titulo()">
     
     <br>
     
+    <!-- -->
     <h3>Buscar por genero</h3>
     <select id="busqueda_genero" onchange="buscar_genero()"> 
-        <option value="todos_generos"></option>
     </select>
     
     <br>
-
+    
+    <!-- Boton para ordenar tabla -->
     <h3>Ordenar por año de publicacion</h3>
-    <button id="ordenar_libros" onclick="ordenar_libros()">Ordenar libros</button>
+    <button id="ordenar_libros" onclick="ordenar_libros()">Ordenar libros por año de publicacion</button>
+    <!-- Tabla que muestra los libros -->
     <table id="tabla_libros">
         <thead>
             <tr>
@@ -49,6 +52,7 @@
     
     <br>
 
+    <!-- Resumen que muestra datos de la lista de libros -->
     <h3>Resumen</h3>
     <section id="resumen_libros"></section>
 

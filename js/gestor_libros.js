@@ -1,12 +1,14 @@
 
 // Variables para manejar estados
+let editando = false;
+let indice_edicion = null;
 let orden_ascendente = false;
 
 // Lista de libros 
 let libros = JSON.parse(localStorage.getItem('libros')) || []
 
 // Generos de libros
-let generos = ['Ficcion', 'Drama', 'Poesia', 'Comedia', 'Historia','Terror','Misterio']
+let generos = ['Ficcion', 'Drama', 'Poesia', 'Comedia', 'Historia', 'Terror', 'Misterio']
 
 // Agregar generos a una etiqueta select
 const seleccion_generos = (id) =>{
@@ -21,7 +23,7 @@ const seleccion_generos = (id) =>{
     
     generos.forEach( genero =>{
         const option = document.createElement('option')
-        option.value = genero.toLowerCase()
+        option.value = genero
         option.textContent = genero
         select.appendChild(option)
     })
@@ -38,11 +40,21 @@ const agregar_libro = () =>{
 
     // Comprobar que no esten vacios
     if (titulo !== '' && autor !== '' && anio !== ''){
+        // Comprobar si se esta editando o agregando un libro nuevo
+        if(indice_edicion !== null){
+            // Guardar los nuevos valores del libro
+            libros[indice_edicion] = {titulo, autor, anio, genero}
+            // Vaciar indice de edicion
+            indice_edicion = null
+            // Cambiar texto del boton
+            document.getElementById('button_form').textContent = 'Guardar cambios'
+        }
+        else{
         // Agregar libro a la lista
         libros.push({ titulo, autor, anio, genero })
-        // Guardar lista de la libros en local storage
-        localStorage.setItem('libros', JSON.stringify(libros))} 
-
+    }
+    // Guardar lista de la libros en local storage
+    localStorage.setItem('libros', JSON.stringify(libros))} 
     // Mostrar libros
     renderizar_libros()
 
@@ -63,6 +75,18 @@ const eliminar_libro = (index) =>{
     renderizar_libros()
 }
 
+const editar_libro = (index) =>{
+    // Identificar libro usando el indice
+    const libro = libros[index]
+    document.getElementById('titulo').value = libro.titulo
+    document.getElementById('autor').value = libro.autor
+    document.getElementById('anio').value = libro.anio
+    document.getElementById('genero').value = libro.genero
+
+    // Guardar indice y cambiar valor de variable 
+    indice_edicion = index
+    editando = true
+}
 
 // Filtrar libros por titulo
 const buscar_titulo = () =>{
@@ -89,7 +113,7 @@ const buscar_genero = () =>{
     }
 
     // Crear lista de libros filtrados
-    const generos_filtrados = libros.filter(libro => libro.genero.toLowerCase().includes(genero_seleccionado)
+    const generos_filtrados = libros.filter(libro => libro.genero.toLowerCase().includes(genero_seleccionado.toLowerCase())
     )
     // Mostrar libros filtrados
     renderizar_libros(generos_filtrados)
@@ -133,7 +157,7 @@ const renderizar_libros = (lista = libros) =>{ // Recibe una lista
             <td>${libro.anio}</td>
             <td>${libro.genero}</td>
             <td>
-                <button onclick="">Editar</button>
+                <button onclick="editar_libro(${index})">Editar</button>
                 <button onclick="eliminar_libro(${index})">Eliminar</button>
             </td>
         `
@@ -142,8 +166,48 @@ const renderizar_libros = (lista = libros) =>{ // Recibe una lista
     })
 }
 
+
+const mostrar_resumen = () =>{
+    
+    const resumen = document.getElementById('resumen_libros')
+    
+    if (libros.lenght === 0){
+        resumen.innerText = 'No se muestran datos cargados'
+        return;
+    }   
+
+    // Total de libros
+    const total_libros = libros.length
+
+    // Total de años
+    const suma_anios = libros.reduce((contador, libro) => contador + parseInt(libro.anio), 0)
+    
+    // Promedio de años
+    const promedio_anio = Math.round(suma_anios/total_libros)
+
+    // Libros posteriores al 2010
+    const libros_post_2010 = libros.filter(libro => libro.anio > 2010).length
+    
+    // Libro mas reciente
+    const mas_reciente = libros.reduce((nuevo, libro) => (libro.anio > nuevo,anio ? libro: nuevo), libros[0])
+    
+    // Libro mas antiguo
+    const mas_antiguo = libros.reduce((antiguo, libro) => (libro.anio < antiguo.anio ? libro : antiguo), libros[0])
+
+    resumen.innerHTML = `
+        <p> Total de libros: ${total_libros}</p>
+        <p> Promedio de años: ${promedio_anio}</p>
+        <p> Libros posteriores al año 2010: ${libros_post_2010}</p>
+        <p> Libro mas reciente: ${mas_reciente.titulo} ${mas_reciente.anio}</p>
+        <p> Libro mas antiguo: ${mas_antiguo.titulo} ${mas_antiguo.anio}</p>
+    `
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     renderizar_libros()
     seleccion_generos('genero')
     seleccion_generos('busqueda_genero')
+    mostrar_resumen()
 })
