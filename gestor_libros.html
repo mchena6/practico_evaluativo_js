@@ -15,22 +15,29 @@
         <input type="text" id="anio" placeholder="Año de publicacion">
         <select id="genero">
         </select>
+        <label >
+            <input type="checkbox" id="leido">
+            Leido
+        </label>
         <button id="button_form" type="submit">Agregar libro</button>
     </form>
 
-    <br>
     <!-- Busqueda de libros por titulo-->    
     <h3>Buscar por titulo</h3>
     <input type="text" id="busqueda_titulo" placeholder="Titulo del libro" oninput="buscar_titulo()">
     
-    <br>
     
     <!-- -->
     <h3>Buscar por genero</h3>
-    <select id="busqueda_genero" onchange="buscar_genero()"> 
-    </select>
+    <select id="busqueda_genero" onchange="buscar_genero()"></select>
     
-    <br>
+    <h3>Filtrar por libros leidos</h3>
+    <select id="filtrar_leidos" onchange="filtrar_leidos()">
+        <option value="todos">Todos</option>
+        <option value="leidos">Leidos</option>
+        <option value="no_leidos">No leidos</option>
+    </select>
+
     
     <!-- Boton para ordenar tabla -->
     <h3>Ordenar por año de publicacion</h3>
@@ -50,8 +57,6 @@
         </tbody>
     </table>
     
-    <br>
-
     <!-- Resumen que muestra datos de la lista de libros -->
     <h3>Resumen</h3>
     <section id="resumen_libros"></section>
