@@ -22,6 +22,7 @@ const seleccion_generos = (id) =>{
         select.appendChild(todos)
     }
     
+    // Agregar una opcion en un select para cada genero
     generos.forEach( genero =>{
         const option = document.createElement('option')
         option.value = genero
@@ -40,20 +41,34 @@ const agregar_libro = () =>{
     const genero = document.getElementById('genero').value
     const leido = document.getElementById('leido').checked
 
-    // Comprobar que no esten vacios
-    if (titulo !== '' && autor !== '' && anio !== '' && anio > 1900 && anio < 2026){
-        // Comprobar si se esta editando o agregando un libro nuevo
-        if(indice_edicion !== null){
-            // Guardar los nuevos valores del libro
-            libros[indice_edicion] = {titulo, autor, anio, genero, leido}
-            // Cambiar texto del boton
-            document.getElementById('button_form').textContent = 'Agregar libro'
-            // Vaciar indice de edicion
-            indice_edicion = null
+    // Variable para controlar condicion 
+    let repetido = false;
+
+    // Recorrer libros
+    libros.forEach(libro => {
+        // Verificar que titulo y autor no esten repetidos
+        if (libro.titulo.toLowerCase() === titulo.toLowerCase() && libro.autor.toLowerCase() === autor.toLowerCase()){
+            repetido = true
+            // Avisar si esta repetido
+            alert('Ya existe un libro con ese título y autor')
+            return
         }
-        else{
-        // Agregar libro a la lista
-        libros.push({ titulo, autor, anio, genero, leido})
+    })
+
+    // Comprobar que no esten vacios, el año, y que no se repitan titulo y autor
+    if (titulo !== '' && autor !== '' && anio !== '' && anio > 1900 && anio < 2026 && repetido == false){
+        // Comprobar si se esta editando o agregando un libro nuevo
+            if(indice_edicion !== null){
+                // Guardar los nuevos valores del libro
+                libros[indice_edicion] = {titulo, autor, anio, genero, leido}
+                // Cambiar texto del boton
+                document.getElementById('button_form').textContent = 'Agregar libro'
+                // Vaciar indice de edicion
+                indice_edicion = null
+            }
+            else{
+            // Agregar libro a la lista
+            libros.push({ titulo, autor, anio, genero, leido})
     }
     // Guardar lista de la libros en local storage
     localStorage.setItem('libros', JSON.stringify(libros))} 
@@ -82,6 +97,7 @@ const eliminar_libro = (index) =>{
 
 // Editar libro
 const editar_libro = (index) =>{
+
     // Identificar libro usando el indice
     const libro = libros[index]
     document.getElementById('titulo').value = libro.titulo
@@ -100,6 +116,7 @@ const editar_libro = (index) =>{
 
 // Filtrar libros por titulo
 const buscar_titulo = () =>{
+
     // Guardar titulo buscado
     const filtro_titulo = document.getElementById('busqueda_titulo').value.toLowerCase()
 
