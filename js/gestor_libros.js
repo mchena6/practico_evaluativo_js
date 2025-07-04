@@ -43,20 +43,10 @@ const agregar_libro = () =>{
 
     // Variable para controlar condicion 
     let repetido = false;
-
-    // Recorrer libros
-    libros.forEach(libro => {
-        // Verificar que titulo y autor no esten repetidos
-        if (libro.titulo.toLowerCase() === titulo.toLowerCase() && libro.autor.toLowerCase() === autor.toLowerCase()){
-            repetido = true
-            // Avisar si esta repetido
-            alert('Ya existe un libro con ese título y autor')
-            return
-        }
-    })
-
+    
+    
     // Comprobar que no esten vacios, el año, y que no se repitan titulo y autor
-    if (titulo !== '' && autor !== '' && anio !== '' && anio > 1900 && anio < 2026 && repetido == false){
+    if (titulo !== '' && autor !== '' && anio !== '' && anio > 1900 && anio < 2026){
         // Comprobar si se esta editando o agregando un libro nuevo
             if(indice_edicion !== null){
                 // Guardar los nuevos valores del libro
@@ -67,10 +57,20 @@ const agregar_libro = () =>{
                 indice_edicion = null
             }
             else{
-            // Agregar libro a la lista
-            libros.push({ titulo, autor, anio, genero, leido})
-    }
-    // Guardar lista de la libros en local storage
+                // Recorrer libros
+                libros.forEach(libro => {
+                    // Verificar que titulo y autor no esten repetidos
+                    if (libro.titulo.toLowerCase() === titulo.toLowerCase() && libro.autor.toLowerCase() === autor.toLowerCase()){
+                        repetido = true
+                        // Avisar si esta repetido
+                        alert('Ya existe un libro con ese título y autor')
+                        return
+                    }
+                })
+                // Agregar libro a la lista
+                libros.push({ titulo, autor, anio, genero, leido})
+            }
+            // Guardar lista de la libros en local storage
     localStorage.setItem('libros', JSON.stringify(libros))} 
     // Mostrar libros
     renderizar_libros()
@@ -245,7 +245,7 @@ const mostrar_resumen = () =>{
     const libros_post_2010 = libros.filter(libro => libro.anio > 2010).length
     
     // Libro mas reciente
-    const mas_reciente = libros.reduce((nuevo, libro) => (libro.anio > nuevo,anio ? libro: nuevo), libros[0])
+    const mas_reciente = libros.reduce((nuevo, libro) => (libro.anio > nuevo.anio ? libro : nuevo), libros[0])
     
     // Libro mas antiguo
     const mas_antiguo = libros.reduce((antiguo, libro) => (libro.anio < antiguo.anio ? libro : antiguo), libros[0])
